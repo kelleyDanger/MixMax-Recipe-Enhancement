@@ -17,7 +17,9 @@ To simulate locally how Mixmax calls the resolver URL (to return HTML that goes 
 
 ```
 curl http://localhost:9145/resolver?ingredients=cheese
+```
 
 ### Sources
 **Food2Fork API:** http://food2fork.com/about/api
+
 **Mixmax API:** http://developer.mixmax.com/
