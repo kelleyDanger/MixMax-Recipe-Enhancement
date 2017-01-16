@@ -5,26 +5,29 @@ var _ = require('underscore');
 
 // The API that returns the in-email representation.
 module.exports = function(req, res) {
-  console.log("POOP");
-  console.log(req);
-  var term = req.query.text.trim();
+  var ingredients = req.query.text.trim();
+  console.log("INGREDIENT: " + ingredients);
 
-  if (/^https:\/\/community-food2fork\.p\.mashape\.com\/get\/\S+/.test(term)) {
+  if (/^http:\/\/food2fork\.com\/\S+/.test(ingredients)) {
     // Special-case: handle strings in the special URL form that are suggested by the /typeahead
     // API. This is how the command hint menu suggests an exact Giphy image.
-    handleIdString(term.replace(/^https:\/\/community-food2fork\.p\.mashape\.com\//, ''), req, res);
+    handleIdString(ingredients.replace(/^http:\/\/food2fork\.com\//, ''), req, res);
   } else {
     // Else, if the user was typing fast and press enter before the /typeahead API can respond,
     // Mixmax will just send the text to the /resolver API (for performance). Handle that here.
-    handleSearchString(term, req, res);
+    handleSearchString(ingredients, req, res);
   }
 };
 
 function handleIdString(id, req, res) {
+  console.log("ID: " + id);
+  console.log("REQ: " + req);
+  console.log("RES: " + res);
   request({
-    url: 'https://community-food2fork.p.mashape.com/get' + encodeURIComponent(id),
+    url: 'http://food2fork.com/api/get', //+ encodeURIComponent(id),
     qs: {
-      api_key: key
+      key: key,
+      rId: id
     },
     gzip: true,
     json: true,
@@ -35,13 +38,29 @@ function handleIdString(id, req, res) {
       return;
     }
 
-    var data = response.body.data;
-    console.log(data);
+    var recipe = response.body.recipe;
+    console.log(recipe);
 
-    var image = response.body.data.images.original;
-    var width = image.width > 600 ? 600 : image.width;
-    var html = '<img style="max-width:100%;" src="' + image.url + '" width="' + width + '"/>';
-    res.json({
+    var title = recipe.title;
+    var publisher = recipe.publisher;
+    var image_url = recipe.image_url;
+    var source_url = recipe.source_url;
+    var ingredients_list = recipe.ingredients;
+
+    var list_html = "<ul>";
+    ingredients_list.forEach(function(ingredient) {
+      list_html += "<li>" + ingredient + "</li>"
+    });
+    list_html += "</ul>"
+
+    var html =
+      '<div>' +
+        '<h2 style="display:inline;">' + title + '</h2><em> by ' + publisher + '</em>' +
+        '<br><a href=' + source_url + '><img style="max-width:100%;" src=' + image_url + ' width="400px" /></a>' +
+        '<h3>Ingredients List:</h3>' + list_html +
+      '</div>';
+
+      res.json({
       body: html
         // Add raw:true if you're returning content that you want the user to be able to edit
     });
@@ -50,10 +69,10 @@ function handleIdString(id, req, res) {
 
 function handleSearchString(term, req, res) {
   request({
-    url: 'https://community-food2fork.p.mashape.com/search',
+    url: 'http://food2fork.com/api/search',
     qs: {
-      tag: term,
-      api_key: key
+      q: term,
+      key: key
     },
     gzip: true,
     json: true,
@@ -64,11 +83,10 @@ function handleSearchString(term, req, res) {
       return;
     }
 
-    var data = response.body.data;
-    console.log(data);
-    // Cap at 600px wide
-    var width = data.image_width > 600 ? 600 : data.image_width;
-    var html = '<img style="max-width:100%;" src="' + data.image_url + '" width="' + width + '"/>';
+    console.log("RESPONSE: " + response.body);
+    var recipe = response.body.recipe;
+    console.log("RECIPE: " + recipe);
+    var html = '<img style="max-width:100%;" src="' + recipe.image_url + '" width="' + 600 + '"/>';
     res.json({
       body: html
         // Add raw:true if you're returning content that you want the user to be able to edit

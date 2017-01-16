@@ -5,8 +5,7 @@ var _ = require('underscore');
 
 // The Type Ahead API.
 module.exports = function(req, res) {
-  var ingredients = req.query.ingredients.trim();
-  console.log("KEY: " + key);
+  var ingredients = req.query.text.trim();
   console.log("INGREDIENTS: " + ingredients);
   if (!ingredients) {
     res.json([{
@@ -32,16 +31,14 @@ module.exports = function(req, res) {
     if (!response.body.recipes) {
       return "Sorry, no recipes were found.";
     }
-    console.log(response.body.recipes);
     var results = _.chain(response.body.recipes)
       .filter(function(recipe){
-        debugger;
         return recipe.image_url && recipe.source_url;
       })
       .map(function(recipe){
         return {
-          title: "<img style='height:40px;' src='" + recipe.image_url + "'>",
-          text: recipe.title
+          title: "<img style='height:40px;' src='" + recipe.image_url + "'></br><em>" + recipe.title + "</em>",
+          text: "http://food2fork.com/" + recipe.recipe_id
         };
       })
       .value();

@@ -1,0 +1,28 @@
+{
+  "name": "mixmax-food2fork-recipe-enhancement",
+  "version": "1.0.0",
+  "description": "food2fork recipe slash command for mixmax",
+  "main": "server.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kelleyDanger/MixMax-Recipe-Enhancement.git"
+  },
+  "keywords": [
+    "mixmax",
+    "slash",
+    "command",
+    "food2fork"
+  ],
+  "author": "Kelley Scanlon <kelleyscanlon@gmail.com> (www.kelleyscanlon.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kelleyDanger/MixMax-Recipe-Enhancement/issues"
+  },
+  "homepage": "https://github.com/kelleyDanger/MixMax-Recipe-Enhancement#readme"
+}
