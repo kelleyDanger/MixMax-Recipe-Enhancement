@@ -2,6 +2,8 @@
 
 This is an open source Mixmax Slash Command. See <http://developer.mixmax.com/docs/overview-slash-commands#tutorial-building-mygiphy> for more a tutorial on how to code using Mixmax API.
 
+![alt text](peepshi_demonstration.gif "Demonstration Gif")
+
 ## Running locally
 
 1. Install using `npm install`
